@@ -224,6 +224,26 @@ class APITests(OfflineTestCase):
         super().setUp()
         self.http = self.enterContext(TestClient(app))
 
+    def test_homepage_does_not_call_llm(self):
+        response = self.http.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("text/html", response.headers["content-type"])
+        self.assertIn('id="product-form"', response.text)
+        self.sdk.assert_not_called()
+
+    def test_frontend_assets_are_served(self):
+        for path, content_type in (("/static/styles.css", "text/css"), ("/static/app.js", "javascript")):
+            with self.subTest(path=path):
+                response = self.http.get(path)
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(content_type, response.headers["content-type"])
+        self.sdk.assert_not_called()
+
+    def test_demo_route_is_not_exposed(self):
+        response = self.http.get("/demo")
+        self.assertEqual(response.status_code, 404)
+        self.sdk.assert_not_called()
+
     def test_successful_request_with_incomplete_data(self):
         response = self.http.post("/generate", json={"name": "Манометр", "specs": {"питание": " "}})
         self.assertEqual(response.status_code, 200)

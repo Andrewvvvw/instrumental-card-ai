@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f3">
+  <meta name="description" content="Генерация карточки товара по техническим данным прибора.">
+  <title>Instrument — карточки товаров</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%23204335'/%3E%3Cpath d='M12 12h6v16h-6zm10 0h6v10h-6z' fill='%23d9ebce'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="intro">
+      <h1>Генерация карточки товара</h1>
+    </header>
+
+    <div class="workspace">
+      <section class="panel input-panel" aria-labelledby="input-heading">
+        <div class="panel-heading">
+          <h2 id="input-heading">Данные прибора</h2>
+          <button class="text-button" id="clear-button" type="button">Очистить</button>
+        </div>
+        <form id="product-form">
+          <fieldset id="form-fields">
+            <label for="product-name">Название <span class="required" aria-hidden="true">*</span></label>
+            <input id="product-name" name="name" placeholder="Название прибора" required autocomplete="off">
+
+            <label for="manufacturer">Производитель <span class="optional">необязательно</span></label>
+            <input id="manufacturer" name="manufacturer" placeholder="Название производителя" autocomplete="off">
+
+            <div class="field-heading">
+              <label id="specs-label">Характеристики</label>
+            </div>
+            <div class="specs-columns" aria-hidden="true"><span>Параметр</span><span>Значение</span></div>
+            <div id="specs-list" role="group" aria-labelledby="specs-label"></div>
+            <button id="add-spec" class="add-spec" type="button"><span aria-hidden="true">+</span> Добавить характеристику</button>
+
+            <label for="description">Описание или фрагмент паспорта</label>
+            <textarea id="description" name="description" rows="4" placeholder="Назначение прибора, особенности, техническое описание…"></textarea>
+
+            <div id="form-error" class="form-error" role="alert" hidden></div>
+            <button id="generate-button" class="button button-primary" type="submit">
+              <span class="button-label">Создать карточку</span>
+              <svg class="arrow-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
+              <span class="spinner" aria-hidden="true" hidden></span>
+            </button>
+          </fieldset>
+        </form>
+      </section>
+
+      <section class="panel result-panel" id="result-panel" aria-labelledby="result-heading" aria-busy="false">
+        <div class="panel-heading result-heading">
+          <h2 id="result-heading">Результат</h2>
+          <span class="result-badge" id="result-badge" role="status" hidden></span>
+        </div>
+        <div class="result-toolbar">
+          <div class="tabs" role="tablist" aria-label="Формат результата">
+            <button id="preview-tab" class="tab active" role="tab" aria-selected="true" aria-controls="preview-content" type="button">Карточка</button>
+            <button id="json-tab" class="tab" role="tab" aria-selected="false" aria-controls="json-content" tabindex="-1" type="button" disabled>JSON</button>
+          </div>
+          <button id="copy-button" class="copy-button" type="button" disabled>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="7" width="9" height="10" rx="2"/><path d="M11 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg>
+            Скопировать
+          </button>
+        </div>
+
+        <div id="preview-content" class="preview-content" role="tabpanel" aria-labelledby="preview-tab">
+          <div id="empty-state" class="empty-state">
+            <p>Результат появится после генерации.</p>
+          </div>
+          <article id="card-content" hidden>
+            <section class="output-section">
+              <div class="output-label"><h3>SEO-заголовок</h3><span id="title-count"></span></div>
+              <h4 id="seo-title" class="seo-title"></h4>
+            </section>
+            <section class="output-section">
+              <div class="output-label"><h3>SEO-описание</h3><span id="description-count"></span></div>
+              <p id="seo-description" class="seo-description"></p>
+            </section>
+            <section class="output-section">
+              <div class="output-label"><h3>Ключевые характеристики</h3></div>
+              <dl id="characteristics" class="characteristics"></dl>
+            </section>
+            <section class="output-section">
+              <div class="output-label"><h3>Поисковые запросы</h3></div>
+              <ul id="search-queries" class="search-queries"></ul>
+            </section>
+            <section class="commercial-section">
+              <div class="output-label"><h3><span class="status-dot"></span> Для менеджера</h3></div>
+              <p id="commercial-block"></p>
+            </section>
+            <aside id="missing-section" class="missing-section" hidden>
+              <h3>Нужно уточнить</h3>
+              <ul id="missing-fields"></ul>
+            </aside>
+          </article>
+        </div>
+        <div id="json-content" class="json-content" role="tabpanel" aria-labelledby="json-tab" hidden>
+          <pre id="json-output" tabindex="0" aria-label="Результат в формате JSON"></pre>
+        </div>
+        <div id="loading-overlay" class="loading-overlay" hidden>
+          <span class="large-spinner" aria-hidden="true"></span>
+          <strong>Создаём карточку…</strong>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
