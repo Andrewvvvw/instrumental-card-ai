@@ -2,8 +2,8 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-from prompts import SYSTEM_PROMPT, build_user_prompt
-from schemas import ProductInput, LLMGeneratedContent
+from .prompts import SYSTEM_PROMPT, build_user_prompt
+from .schemas import ProductInput, LLMGeneratedContent
 
 load_dotenv()
 

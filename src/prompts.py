@@ -1,4 +1,4 @@
-from schemas import ProductInput
+from .schemas import ProductInput
 
 SYSTEM_PROMPT="""
 Ты - ИИ-помощник для подготовки товарных описаний.
