@@ -6,7 +6,7 @@
 
 | Вход | Результат | Происхождение |
 | --- | --- | --- |
-| [`dm02.input.json`](dm02.input.json) | [`dm02.illustrative-output.json`](dm02.illustrative-output.json) | Входной JSON из примера задания: манометр DM 02, производитель «Манотомь». |
+| [`dm02.input.json`](dm02.input.json) | [`dm02.illustrative-output.json`](dm02.illustrative-output.json) | Входной JSON из примера задания: манометр DM 02, производитель "Манотомь". |
 | [`incomplete-product.input.json`](incomplete-product.input.json) | [`incomplete-product.illustrative-output.json`](incomplete-product.illustrative-output.json) | Синтетический пример датчика температуры с пропусками; не является вторым товаром заказчика. |
 
 Карточки соответствуют текущей схеме `ProductCard`, включая длины описаний,
@@ -17,26 +17,3 @@
 Во втором примере неизвестные диапазон измерений и питание помечены как
 `данных нет`. В `missing_fields` также отражены отсутствующие производитель
 и описание. Характеристики реального прибора для этого примера не заявляются.
-
-## Как сохранить фактический результат
-
-После настройки `.env` и запуска сервера можно выполнить запрос вручную:
-
-```bash
-curl --fail-with-body -sS http://127.0.0.1:8000/generate \
-  -H 'Content-Type: application/json' \
-  --data-binary @examples/dm02.input.json \
-  -o examples/dm02.generated-output.json
-```
-
-**Команда вызывает LLM и расходует лимит провайдера.** Перед выдачей файла за
-успешный результат проверьте HTTP-статус и содержимое: при ошибке файл тоже может
-содержать JSON с описанием ошибки.
-
-Для второго примера замените путь входа на
-`examples/incomplete-product.input.json`, а выхода — на
-`examples/incomplete-product.generated-output.json`. При наличии второго товара
-из задания сначала подставьте его реальные входные данные.
-
-Для фактических результатов укажите идентификатор модели из `OPENROUTER_MODEL`
-и дату получения. Не переименовывайте демонстрационные карточки в сгенерированные.
